@@ -1,9 +1,9 @@
 # Example compose file for running Claude Code from the published image.
 #
-# Keep a copy outside of your projects (e.g. ~/.config/claude-docker/compose.yaml)
+# Keep a copy outside of your projects (e.g. ~/.config/claude-code-docker/compose.yaml)
 # and run it from the project directory:
 #
-#   docker compose -f ~/.config/claude-docker/compose.yaml run --rm claude
+#   docker compose -f ~/.config/claude-code-docker/compose.yaml run --rm claude
 #
 # ${PWD} and ${HOME} are taken from the shell that runs the command.
 

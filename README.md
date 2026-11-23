@@ -40,16 +40,16 @@ Download [`compose.example.yaml`](compose.example.yaml) to a place outside
 your projects and make sure the mounted paths exist:
 
 ```sh
-mkdir -p ~/.config/claude-docker ~/.claude
+mkdir -p ~/.config/claude-code-docker ~/.claude
 curl -fsSL https://raw.githubusercontent.com/voleum/claude-code-docker/main/compose.example.yaml \
-  -o ~/.config/claude-docker/compose.yaml
+  -o ~/.config/claude-code-docker/compose.yaml
 [ -e ~/.claude.json ] || echo '{}' > ~/.claude.json
 ```
 
 Then start Claude Code from any project directory:
 
 ```sh
-docker compose -f ~/.config/claude-docker/compose.yaml run --rm claude
+docker compose -f ~/.config/claude-code-docker/compose.yaml run --rm claude
 ```
 
 ### The `dclaude` command
@@ -62,7 +62,7 @@ your shell config. Paste this into a terminal once; for bash, replace
 cat >> ~/.zshrc <<'EOF'
 
 dclaude() {
-  local compose=~/.config/claude-docker/compose.yaml
+  local compose=~/.config/claude-code-docker/compose.yaml
   if [ "$1" = upgrade ]; then
     docker compose -f "$compose" pull
   else
@@ -86,7 +86,7 @@ The image entrypoint is `claude`. To open a shell in the container instead,
 override it:
 
 ```sh
-docker compose -f ~/.config/claude-docker/compose.yaml run --rm --entrypoint bash claude
+docker compose -f ~/.config/claude-code-docker/compose.yaml run --rm --entrypoint bash claude
 ```
 
 ### Updating the image
