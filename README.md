@@ -54,13 +54,12 @@ docker compose -f ~/.config/claude-code-docker/compose.yaml run --rm claude
 
 ### The `dclaude` command
 
-To start Claude Code with a single command, add the `dclaude` function to
-your shell config. Paste this into a terminal once; for bash, replace
-`~/.zshrc` with `~/.bashrc` in both places.
+To start Claude Code with a single command, install the `dclaude` shell
+function. Paste this into a terminal; for bash, replace `~/.zshrc` with
+`~/.bashrc` in all three places.
 
 ```sh
-cat >> ~/.zshrc <<'EOF'
-
+cat > ~/.config/claude-code-docker/dclaude.sh <<'EOF'
 dclaude() {
   local compose=~/.config/claude-code-docker/compose.yaml
   if [ "$1" = upgrade ]; then
@@ -70,8 +69,14 @@ dclaude() {
   fi
 }
 EOF
+grep -qF 'claude-code-docker/dclaude.sh' ~/.zshrc 2>/dev/null \
+  || echo '. ~/.config/claude-code-docker/dclaude.sh' >> ~/.zshrc
 source ~/.zshrc
 ```
+
+The function lives in its own file, and the shell config only loads it, so
+the command is safe to run again: it replaces the function instead of
+adding a second copy.
 
 Run `dclaude` from any project directory. Arguments are passed straight to
 Claude Code:
