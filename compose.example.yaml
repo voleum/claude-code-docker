@@ -1,0 +1,33 @@
+# Example compose file for running Claude Code from the published image.
+#
+# Keep a copy outside of your projects (e.g. ~/.config/claude-docker/compose.yaml)
+# and run it from the project directory:
+#
+#   docker compose -f ~/.config/claude-docker/compose.yaml run --rm claude
+#
+# ${PWD} and ${HOME} are taken from the shell that runs the command.
+
+services:
+  claude:
+    # Replace with your Docker Hub image. Use :latest for the image without
+    # the extra tools, or a version tag such as :2.1.330-full to pin.
+    image: your-dockerhub-user/claude-code:full
+
+    # Host networking lets Claude Code reach services that listen only on
+    # 127.0.0.1 on the host, such as the JetBrains MCP server.
+    network_mode: host
+
+    # The project is mounted at the same absolute path as on the host.
+    # Session history, local-scope MCP servers and paths returned by the IDE
+    # all depend on the path being identical.
+    working_dir: ${PWD}
+    volumes:
+      - ${PWD}:${PWD}
+      # Claude Code state and settings. Both must exist on the host before the
+      # first run, otherwise Docker creates ~/.claude.json as a directory.
+      - ${HOME}/.claude:/home/claude/.claude
+      - ${HOME}/.claude.json:/home/claude/.claude.json
+
+    # Do not set ANTHROPIC_API_KEY (usage would be billed to the API instead of
+    # the subscription) or CLAUDE_CONFIG_DIR (the mounted .claude.json would be
+    # ignored).

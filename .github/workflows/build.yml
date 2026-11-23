@@ -1,0 +1,42 @@
+name: Build Claude Code image
+
+# Required repository settings (Settings -> Secrets and variables -> Actions):
+#   secret   DOCKERHUB_USERNAME - Docker Hub account name
+#   secret   DOCKERHUB_TOKEN    - Docker Hub access token with Read & Write scope
+#   variable DOCKERHUB_IMAGE    - optional, defaults to <DOCKERHUB_USERNAME>/claude-code
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if this version is already published
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+      - name: Check version and build
+        env:
+          IMAGE: ${{ vars.DOCKERHUB_IMAGE || format('{0}/claude-code', secrets.DOCKERHUB_USERNAME) }}
+          FORCE: ${{ inputs.force }}
+        run: sh ci/build.sh
