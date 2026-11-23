@@ -9,9 +9,9 @@
 
 services:
   claude:
-    # Replace with your Docker Hub image. Use :latest for the image without
-    # the extra tools, or a version tag such as :2.1.330-full to pin.
-    image: your-dockerhub-user/claude-code:full
+    # Use :latest for the image without the extra tools, or a version tag
+    # such as :2.1.330-full to pin.
+    image: voleum/claude-code:full
 
     # Host networking lets Claude Code reach services that listen only on
     # 127.0.0.1 on the host, such as the JetBrains MCP server.

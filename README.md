@@ -36,12 +36,13 @@ Claude Code version is repackaged.
 
 ## Usage
 
-Copy [`compose.example.yaml`](compose.example.yaml) to a place outside your
-projects, set the image name in it, and make sure the mounted paths exist:
+Download [`compose.example.yaml`](compose.example.yaml) to a place outside
+your projects and make sure the mounted paths exist:
 
 ```sh
 mkdir -p ~/.config/claude-docker ~/.claude
-cp compose.example.yaml ~/.config/claude-docker/compose.yaml
+curl -fsSL https://raw.githubusercontent.com/voleum/claude-code-docker/main/compose.example.yaml \
+  -o ~/.config/claude-docker/compose.yaml
 [ -e ~/.claude.json ] || echo '{}' > ~/.claude.json
 ```
 
