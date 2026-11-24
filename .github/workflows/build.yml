@@ -35,8 +35,16 @@ jobs:
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
-      - name: Check version and build
+      - name: Check versions
+        id: check
         env:
           IMAGE: ${{ vars.DOCKERHUB_IMAGE || format('{0}/claude-code', secrets.DOCKERHUB_USERNAME) }}
           FORCE: ${{ inputs.force }}
+        run: sh ci/check.sh
+
+      - name: Build
+        if: steps.check.outputs.build == 'true'
+        env:
+          IMAGE: ${{ vars.DOCKERHUB_IMAGE || format('{0}/claude-code', secrets.DOCKERHUB_USERNAME) }}
+          APK_VER: ${{ steps.check.outputs.version }}
         run: sh ci/build.sh

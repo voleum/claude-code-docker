@@ -136,13 +136,17 @@ inside the container. A new version arrives with a new image.
 ## Build pipeline
 
 [`.github/workflows/build.yml`](.github/workflows/build.yml) runs twice a
-day, at 00:00 and 12:00 UTC, and calls [`ci/build.sh`](ci/build.sh), which:
+day, at 00:00 and 12:00 UTC, in three steps:
 
-1. reads the current version from the `latest` channel of the official
-   Claude Code apk repository, for both architectures; if they differ, it
-   stops and waits for the next run;
-2. exits if the tag `<apk version>-full` is already on Docker Hub;
-3. otherwise builds both variants for both platforms and pushes all tags.
+1. **Login to Docker Hub.** It comes first so that the version check also
+   works for a private repository.
+2. **Check versions.** [`ci/check.sh`](ci/check.sh) reads the current
+   version from the `latest` channel of the official Claude Code apk
+   repository for both architectures. The build is skipped if the versions
+   differ (the next run tries again) or if the tag `<apk version>-full` is
+   already on Docker Hub.
+3. **Build.** [`ci/build.sh`](ci/build.sh) builds both variants for both
+   platforms and pushes all tags.
 
 The `-full` tag is pushed last, so a build that fails halfway is retried on
 the next run.
@@ -164,7 +168,9 @@ that happens.
 ### Forcing a rebuild
 
 To rebuild a version that is already published (for example after changing
-the `Dockerfile`), run the workflow manually with `force` enabled: Actions ->
+the `Dockerfile`), run the workflow manually with `force` enabled. It skips
+the Docker Hub tag check; the run fails if the package versions differ
+between architectures at that moment. To start it: Actions ->
 Build Claude Code image -> Run workflow, or
 
 ```sh
