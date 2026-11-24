@@ -135,11 +135,12 @@ inside the container. A new version arrives with a new image.
 
 ## Build pipeline
 
-[`.github/workflows/build.yml`](.github/workflows/build.yml) runs every day at
-00:00 UTC and calls [`ci/build.sh`](ci/build.sh), which:
+[`.github/workflows/build.yml`](.github/workflows/build.yml) runs twice a
+day, at 00:00 and 12:00 UTC, and calls [`ci/build.sh`](ci/build.sh), which:
 
 1. reads the current version from the `latest` channel of the official
-   Claude Code apk repository;
+   Claude Code apk repository, for both architectures; if they differ, it
+   stops and waits for the next run;
 2. exits if the tag `<apk version>-full` is already on Docker Hub;
 3. otherwise builds both variants for both platforms and pushes all tags.
 
