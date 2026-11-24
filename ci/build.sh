@@ -24,8 +24,8 @@ VER=${APK_VER%-r*}     # 2.1.330
 MINOR=${VER%.*}        # 2.1
 MAJOR=${VER%%.*}       # 2
 
-# Multi-arch builder
-docker run --privileged --rm tonistiigi/binfmt --install arm64,amd64 >/dev/null
+# Multi-arch builder. The runner is amd64, so only arm64 needs an emulator.
+docker run --privileged --rm tonistiigi/binfmt --install arm64 >/dev/null
 docker buildx create --name ci-builder --use >/dev/null 2>&1 \
   || docker buildx use ci-builder
 
