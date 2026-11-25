@@ -136,7 +136,7 @@ inside the container. A new version arrives with a new image.
 ## Build pipeline
 
 [`.github/workflows/build.yml`](.github/workflows/build.yml) runs every
-6 hours (00:00, 06:00, 12:00 and 18:00 UTC) in three steps:
+hour in three steps:
 
 1. **Login to Docker Hub.** It comes first so that the version check also
    works for a private repository.
